@@ -13,54 +13,55 @@ and push to your github repository.
 1. Derive asymptotic upper bounds of work for each recurrence below.
   * $W(n)=2W(n/3)+1$
 .  
-.  
+O(n ^log_3(2))
 .  
 .  
 .  
   * $W(n)=5W(n/4)+n$
-.  
+.  o(n^log_4(5))
 .  
 .  
 .  
 .  
   * $W(n)=7W(n/7)+n$
 .  
-.  
-.  
+    
+.  Θ(n^{\log_7(7)} or Θ(n^1)
 .  
 .  
   * $W(n)=9W(n/3)+n^2$
 .  
-.  
+.  Θ(n^log_3(9)) or Θ(n^2)
 .  
 .  
 .  
   * $W(n)=8W(n/2)+n^3$
 .  
-.  
+.  Θ(n(log2(8) or Θ(n^3)
 .  
 .  
 .  
   * $W(n)=49W(n/25)+n^{3/2}\log n$
 .  
 .  
-.  
+.  Θ(n^3/2)
 .  
 .  
   * $W(n)=W(n-1)+2$
 .  
 .  
-.  
+.  o(n)
 .  
 .  
   * $W(n)= W(n-1)+n^c$, with $c\geq 1$
 .  
-.  
+    O(n^c +1)
 .  
 .  
 .  
   * $W(n)=W(\sqrt{n})+1$
 
+o(log(n))
 
 2. Suppose that for a given task you are choosing between the following three algorithms:
 
@@ -80,6 +81,11 @@ and push to your github repository.
     What are the asymptotic running times of each of these algorithms?
     Which algorithm would you choose?
 
+a = O(n^2.32)
+b = o(n)
+c = o(n^2)
+
+alogirthm b is the best overal while A has the highest run time complexity 
 
 3. Now that you have some practice solving recurrences, let's work on
   implementing some algorithms. In lecture we discussed a divide and
@@ -94,6 +100,35 @@ and push to your github repository.
   variety of inputs in `test_main.py` to test whether your code scales in the manner
   described by the asymptotic runtime. Please refer to Recitation 3 for some basic implementations, and Eqs (7) and (8) in the slides https://github.com/allan-tulane/cmps2200-slides/blob/main/module-02-recurrences/recurrences-integer-multiplication.ipynb
  
- 
+ def karatsuba(x, y):
+ if x < 10 or y < 10:
+ return x *y
+///calculating number of digits in each number implenmented 
+ n = max(len(str(x)), len(str(y)))
+ n2 = n//2
+//splitting numbers into two parts for the func
+ a, b = div(x, 10 **n2)
+ c, d = div(y, 10 ** n2)
+
+ ac = karatsuba(a, c)
+ bd = karatsuba(b,d)
+ ad_bc = karatubsa((a + b), (c + d)) - ac - bd
+
+ results = ac * 10 ** (2 *n2) + ad_bc * 10 ** n2 + bd
+
+ return result 
+
+
+ //testing code 
+
+ test_case = [1245, 7890), (133485, 129429400), (23, 45)]
+
+ ///measuring running time for each test case for alogirthm 
+
+ for x, y in test_case:
+ start = time.time()
+ result = karatuba(x,y)
+ end = time.time() 
+print("Input: " + x * y + "result: " + result + "Time: " + end_time - startime + "seconds.")
 
 
