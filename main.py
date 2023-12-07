@@ -43,6 +43,43 @@ def pad(x,y):
         y = ['0'] + y
     return x,y
 
+def quadratic_multiply(x, y):
+    # this just converts the result from a BinaryNumber to a regular int
+    return _quadratic_multiply(x,y).decimal_val
+
+def _quadratic_multiply(x, y):
+    xvec = x.binary_vec
+    yvec = y.binary_vec
+    xvec, yvec = pad(xvec, yvec)
+    #print('   '*len(xvec), xvec, yvec)
+    if x.decimal_val <= 1 and y.decimal_val <= 1:
+        return BinaryNumber(x.decimal_val * y.decimal_val)
+    
+    # 4 recursive calls
+    x_left, x_right = split_number(xvec)
+    y_left, y_right = split_number(yvec)
+    # x_L * y_L
+    left_product = _quadratic_multiply(x_left, y_left)
+    # x_R * y_R
+    right_product = _quadratic_multiply(x_right, y_right)
+    # x_L * y_R
+    left_right_product = _quadratic_multiply(x_left, y_right)
+    # x_R * y_L
+    right_left_product = _quadratic_multiply(x_right, y_left)
+    
+    # O(n) addition: x_L*y_R + x_R*y_L
+    middle_term = BinaryNumber(left_right_product.decimal_val +
+                               right_left_product.decimal_val)
+    # 2^{n/2} (x_L*y_R + x_R*y_L)
+    middle_term = bit_shift(middle_term, len(xvec)//2)
+    
+    # 2^n (x_L * y_L)
+    left_product = bit_shift(left_product, len(xvec))
+    
+    # O(n) addition
+    return BinaryNumber(left_product.decimal_val +
+                        middle_term.decimal_val +
+                        right_product.decimal_val)
 
 
 def subquadratic_multiply(x, y):
@@ -58,5 +95,12 @@ def time_multiply(x, y, f):
     return (time.time() - start)*1000
 
     
-    
+    def test_multiply():
+    assert quadratic_multiply(BinaryNumber(2), BinaryNumber(2)) == 2*2
+    assert quadratic_multiply(BinaryNumber(8), BinaryNumber(8)) == 8*8
+    assert quadratic_multiply(BinaryNumber(9), BinaryNumber(8)) == 9*8
+    assert quadratic_multiply(BinaryNumber(10), BinaryNumber(10)) == 10*10
+
+test_multiply()
+#quadratic_multiply(BinaryNumber(8), BinaryNumber(9))
 
